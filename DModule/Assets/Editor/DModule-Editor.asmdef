@@ -1,0 +1,10 @@
+{
+  "name": "DModule-Editor",
+  "references": [
+    "DModule"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": []
+}
