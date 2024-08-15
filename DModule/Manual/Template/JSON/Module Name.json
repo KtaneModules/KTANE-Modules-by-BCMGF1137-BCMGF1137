@@ -1,3 +1,18 @@
 {
-  "what_to_do": "Replace this with a JSON generated at ktane.timwi.de (see Tools -> Create new module).",
+  "Author": "BCMGF1137",
+  "Compatibility": "Compatible",
+  "DefuserDifficulty": "VeryEasy",
+  "Description": "Input six digits into the module based on operations from the serial numbers. The presence of certain modules affects the solving process of this module. Tags: blank, d, no-audio",
+  "ExpertDifficulty": "Medium",
+  "ModuleID": "DModule",
+  "MysteryModule": "MustNotBeHiddenOrKey",
+  "Name": "D",
+  "Origin": "Mods",
+  "Published": "2024-08-01",
+  "Quirks": "NeedsOtherSolves",
+  "SortKey": "D",
+  "SourceUrl": "https://github.com/BCMGF1137/KTANE-Modules-by-BCMGF1137/tree/main",
+  "SteamID": "3301204465",
+  "Symbol": "Dmd",
+  "Type": "Regular"
 }
