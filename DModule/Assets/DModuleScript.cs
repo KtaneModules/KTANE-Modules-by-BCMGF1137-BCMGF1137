@@ -17,9 +17,10 @@ public class DModuleScript : MonoBehaviour {
 	public KMSelectable deafShapeD;
 	
 	private bool _isSolved;
-    private bool _unsolvable;
     private bool _OF;
-	private string _finalInput;
+    private bool _org = false;
+    private bool _done = false;
+    private string _finalInput;
 	private string _expectedInput;
     private const string digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private const string base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -39,7 +40,7 @@ public class DModuleScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        Debug.LogFormat("[D #{0}] This module has been generated at Update 2.", _moduleID);
+        Debug.LogFormat("[D #{0}] This module has been generated at Update 3.", _moduleID);
         D = digits.IndexOf(Bomb.GetSerialNumber()[0]) + digits.IndexOf(Bomb.GetSerialNumber()[1]) + digits.IndexOf(Bomb.GetSerialNumber()[2]) + 
             digits.IndexOf(Bomb.GetSerialNumber()[3]) + digits.IndexOf(Bomb.GetSerialNumber()[4]) + digits.IndexOf(Bomb.GetSerialNumber()[5]);
 
@@ -96,6 +97,8 @@ public class DModuleScript : MonoBehaviour {
         Debug.LogFormat("[D #{0}] The correct submission is {1}.", _moduleID, _expectedInput);
 
         deafShapeD.OnInteract += delegate () {
+
+            deafShapeD.AddInteractionPunch(.5f);
             if (_isSolved == false)
             {
                 Debug.LogFormat("[D #{0}] You pressed the D when the last digit of the timer was {1}.", _moduleID, ((int)Bomb.GetTime() % 10));
@@ -151,11 +154,27 @@ public class DModuleScript : MonoBehaviour {
                 Debug.LogFormat("[D #{0}] The unicorn rule doesn't apply. You don't have to solve Simon Stores or UltraStores before D (although it's completely optional).", _moduleID);
             }
 
-            // End of unicorn rule :))))))
+        // End of unicorn rule :))))))
 
-        
+        // Organization Compatibility
 
-		_finalInput = "";
+         for (int i = 0; i < Bomb.GetSolvableModuleIDs().Count; i++)
+         {
+             if ((Bomb.GetSolvableModuleIDs()[i] == "organizationModule") && !_org)
+                {
+                if (unicorn >= 2)
+                {
+                    Debug.LogFormat("[D #{0}] Actually... uhhhhhhh...", _moduleID);
+                    Debug.LogFormat("[D #{0}] Disregard what I just said because there's an Organization (which if the rule was kept the module would be marked with a red triangle on the Repository of Manual Pages, which I think it is by now)." +
+                        "You can freely solve this module without having to solve Simon Stores or UltraStores.", _moduleID);
+                }
+                unicorn = 0;
+                _org = true;
+                }
+         }
+
+
+        _finalInput = "";
 		_isSolved = false;
 	}
 	
@@ -165,7 +184,6 @@ public class DModuleScript : MonoBehaviour {
         if (!_isSolved)
         {
             _storesSolve = 0;
-            _unsolvable = false;
 
             for (int i = 0; i < Bomb.GetSolvedModuleIDs().Count; i++)
             {
@@ -174,14 +192,12 @@ public class DModuleScript : MonoBehaviour {
                     _storesSolve += 1;
                 }
             }
-            for (int i = 0; i < Bomb.GetSolvedModuleIDs().Count; i++)
+            if (unicorn >= 2 && _storesSolve == _storesCount && !_done && _storesCount > 0)
             {
-                if (Bomb.GetSolvedModuleIDs()[i] == "TheCalculator")
-                {
-                    _unsolvable = true;
-                    return;
-                }
+                Debug.LogFormat("[D #{0}] All instances of Simon Stores and UltraStores have been solved, so now you can freely solve D.", _moduleID);
+                _done = true;
             }
+
         }
 
 		if (_finalInput.Length == 6 && !_isSolved) {
@@ -190,22 +206,15 @@ public class DModuleScript : MonoBehaviour {
 				Module.HandleStrike();
 				_finalInput = "";
 			} else {
-                if ((_storesSolve == _storesCount || unicorn < 2) && (!_unsolvable)) {
+                if (_storesSolve == _storesCount || unicorn < 2) {
                     Debug.LogFormat("[D #{0}] You submitted \"" + _finalInput + "\", which is correct. Module solved! :D", _moduleID);
                     Module.HandlePass();
                     _isSolved = true;
                 } else {
-                    if (!_unsolvable)
-                    {
-                        Debug.LogFormat("[D #{0}] You submitted \"" + _finalInput + "\", which normally is correct, but you still have Simon Stores and UltraStores modules to solve. Come back to me when you've done all that. D:<", _moduleID);
+                    Debug.LogFormat("[D #{0}] You submitted \"" + _finalInput + "\", which normally is correct, but you still have Simon Stores and UltraStores modules to solve. Come back to me when you've done all that. D:<", _moduleID);
                         Module.HandleStrike();
                         _finalInput = "";
-                    } else
-                    {
-                        Debug.LogFormat("[D #{0}] You submitted \"" + _finalInput + "\", which normally is correct, but you solved one or more The Calculator modules before this one. D:<", _moduleID);
-                        Module.HandleStrike();
-                        _finalInput = "";
-                    }
+                    
                 }
 			}
 		}
