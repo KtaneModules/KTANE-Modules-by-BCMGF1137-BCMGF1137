@@ -20,6 +20,6 @@ MonoBehaviour:
 
     Input six digits into the module based on operations from the serial number. The
     presence of certain modules affects the solving process of this module.'
-  version: 2.1
+  version: 2.2
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 969e66fd8d7e2c444a7efa0b4e73333e, type: 3}

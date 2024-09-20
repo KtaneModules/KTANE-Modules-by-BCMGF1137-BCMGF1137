@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using KModkit;
 using Rnd = UnityEngine.Random;
+using System.Text.RegularExpressions;
 
 public class DModuleScript : MonoBehaviour {
 
@@ -31,6 +32,8 @@ public class DModuleScript : MonoBehaviour {
     private int unicorn = 0;
     private int _storesCount = 0;
     private int _storesSolve = 0;
+
+    private string TPString = "";
 
     void Awake()
     {
@@ -74,7 +77,6 @@ public class DModuleScript : MonoBehaviour {
             if (Bomb.GetModuleIDs()[i] == "omegaForget")
             {
                 _OF = true;
-                return;
             }
         }
 
@@ -219,4 +221,104 @@ public class DModuleScript : MonoBehaviour {
 			}
 		}
 	}
+
+    // TWITCH PLAYS.
+
+        private bool isInputValid(string someStringIDK)
+    {
+        int numThing = 0;
+        bool preformed = int.TryParse(someStringIDK, out numThing);
+        if (preformed == true && (numThing >= 0 && numThing <= 9))
+        {
+            return true;
+        }
+        return false;
+    }
+
+#pragma warning disable 414
+    private readonly string TwitchHelpMessage = @"!{0} submit <X> [Presses the D when the last digit of the timer is X, where X is a digit. You can also input six digits, but not if you already inputted one or more digits.] | !{0} clearInput [Removes all digits from the submission. Useful in the event you or someone else makes a mistake.]";
+#pragma warning restore 414
+
+    IEnumerator ProcessTwitchCommand(string command)
+    {
+       command = command.ToLowerInvariant().Trim();
+        string[] parameters = command.Split(' ');
+
+        Match match = Regex.Match(command, @"^submit \d$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        if (match.Success)
+        {
+            if (parameters.Length == 2 && isInputValid(parameters[1]))
+            {
+                yield return null;
+                int timepress = 0;
+                int.TryParse(parameters[1], out timepress);
+
+                yield return "sendtochat We are pressing the D when the last digit of the timer is " + timepress + "!";
+
+                while (timepress != ((int)Bomb.GetTime() % 10))
+                {
+                    yield return "trycancel Press cancelled.";
+                    yield return new WaitForSeconds(.1f);
+                }
+                deafShapeD.OnInteract();
+            }
+            else
+            {
+                yield return "sendtochaterror That response is invalid! Please provide a single digit as a parameter.";
+            }
+        }
+         match = Regex.Match(command, @"^submit \d{6}$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        if (match.Success)
+        {
+            if (_finalInput.Length == 0) {
+                if (parameters.Length == 2 && parameters[1].Length == 6)
+                {
+                    TPString = ""; // Checks if it's all digits
+                    for (int i = 0; i < 6; i++)
+                    {
+                        if ("0123456789".Contains(parameters[1][i]))
+                        {
+                            TPString = "" + TPString + parameters[1][i];
+                        } else
+                        {
+                            TPString = "" + TPString + "X";
+                        }
+                    }
+
+                    if (TPString.Contains("X")) {
+                        yield return "sendtochaterror That response is invalid! Please provide six digits as a parameter.";
+                    } else
+                    {
+                        yield return null;
+                        yield return "sendtochat Submitting " + parameters[1] + " into the module!";
+                        for (int i = 0; i < 6; i++)
+                        {
+                            while (parameters[1][i].ToString() != ((int)Bomb.GetTime() % 10).ToString())
+                            {
+                                yield return "trycancel Presses cancelled. Note that presses are still saved into the module!";
+                                yield return new WaitForSeconds(.1f);
+                            }
+                            deafShapeD.OnInteract();
+                        }
+                    }
+
+                }
+                else
+                {
+                    yield return "sendtochaterror That response is invalid! Please provide six digits as a parameter.";
+                }
+            } else
+            {
+                yield return "sendtochaterror The \"submit\" command cannot be used if you already inputted at least one digit!";
+            }
+        }
+         match = Regex.Match(command, @"^clearInput$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        if (match.Success)
+        {
+            yield return null;
+            _finalInput = "";
+            yield return "sendtochat Module input cleared!";
+            Debug.LogFormat("[D #{0}] Input cleared due to reset command.", _moduleID);
+        }
+    }
 }
