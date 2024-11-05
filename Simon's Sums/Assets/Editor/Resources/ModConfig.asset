@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 615501dbe4f3fe94fbf4b564abb10237, type: 3}
+  m_Name: ModConfig
+  m_EditorClassIdentifier: 
+  id: SimonsSums
+  title: Simon's Sums
+  author: BCMGF1137/19#5398
+  description: 'D was a horrible mistake. Let''s just hope that this one doesn''t
+    go as awful as I''d expect.
+
+
+    Use the colors of the buttons and what is flashing to determine what to input
+    into the module, and when to do it.
+
+
+    ---
+
+
+    This is honestly my best work yet. It is very long, and over 1000 lines of code
+    :o
+
+
+    Song Used: "Minuit" by Ryzmik
+
+    https://www.newgrounds.com/audio/listen/992229
+
+
+    Colorblind and TP will come out when I feel like it (because they take a bit of
+    time to code up)'
+  version: 1.0.0
+  outputFolder: build
+  previewImage: {fileID: 2800000, guid: 64f122d188040224f891548441215f41, type: 3}

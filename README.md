@@ -4,4 +4,5 @@ This is where I'll post all of my modules from Keep Talking and Nobody Explodes.
 
 Current mods:
 
-D (DModule) - Update 3 (Final Update)
+D (DModule) - Update 4 (Final Update)
+Simon's Sums (SimonsSums) - Update 1

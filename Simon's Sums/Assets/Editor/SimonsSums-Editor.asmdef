@@ -1,0 +1,10 @@
+{
+  "name": "SimonsSums-Editor",
+  "references": [
+    "SimonsSums"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": []
+}
